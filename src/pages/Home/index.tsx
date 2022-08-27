@@ -10,7 +10,7 @@ import {
   NumberInput,
   NumberInputField,
 } from '@chakra-ui/react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Moon from '@/assets/moon.svg'
 import Sun from '@/assets/sun.svg'
 import Cart from '@/assets/add-cart.svg'
@@ -19,6 +19,7 @@ import ImageFallBack from '@/assets/150.png'
 import i18n from '@/i18n'
 import { moneyFormat } from '@/utils'
 import { CartInfo } from '@/store/cart'
+import CartPage from '@/components/Cart'
 import useSessionData from './useSessionData'
 import './index.scss'
 
@@ -42,6 +43,15 @@ const HomePage = () => {
 
   // cart store
   const totalPrice = useSelector<{cartInfo: CartInfo}>(state => state.cartInfo.totalPrice) as number
+  const dispatch = useDispatch()
+  const onAddCart = (value) => {
+    setIsOpenCart(true)
+    dispatch({type: 'setCartLists', value})
+  }
+
+  // cart page
+  const [isOpenCart, setIsOpenCart] = useState(false)
+  const onCartClose = () => setIsOpenCart(false)
 
   return (
     <div className='home-page'>
@@ -76,7 +86,9 @@ const HomePage = () => {
                 <p className='action-box mt-20'>
                   <span>{sessionData?.currencySymbol}</span>
                   <span>{moneyFormat(i.price/i.unit)}</span>
-                  <Button className='ml-12' colorScheme='blue'><Trans>homePage.addToCart</Trans></Button>
+                  <Button className='ml-12' colorScheme='blue' onClick={() => onAddCart(i)}>
+                    <Trans>homePage.addToCart</Trans>
+                  </Button>
                 </p>
               </div>
             </div>
@@ -106,6 +118,8 @@ const HomePage = () => {
           </>
         )
       }
+
+      <CartPage isOpen={isOpenCart} onClose={onCartClose} />
     </div>
   )
 }

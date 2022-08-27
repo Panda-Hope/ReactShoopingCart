@@ -5,25 +5,41 @@ import {
   FormHelperText,
   Input,
   Button,
+  Image,
   Container
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import Global from '@/assets/global.svg'
 import { loginUser } from '@/api'
 
 import './index.scss'
+import i18n from "@/i18n";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
 
+  // i18n language
+  const lang = i18n.language
+  const switchLang = () => i18n.changeLanguage(lang === 'cn' ? 'en' : 'cn')
+
+  // route navigate
+  const [searchParams] = useSearchParams()
+  const redirect = searchParams.get('redirect')
+
+  // login check
+  const navigate = useNavigate()
   const onLogin = () => {
-    navigate('/')
+    navigate(redirect || '/')
   }
 
   return (
     <Container className='login-page'>
+      <div className='lang-box'>
+        <Image width='20px' onClick={switchLang} src={Global} />
+        <span className='ml-8' onClick={switchLang}>{lang}</span>
+      </div>
       <FormControl>
         <div className='login-title'><Trans>login</Trans></div>
         <div>

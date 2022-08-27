@@ -13,7 +13,9 @@ export interface CartItem {
 
 export interface CartInfo {
   cartLists: CartItem[],
-  totalPrice: number
+  totalPrice: number,
+  currencySymbol: string,
+  currency: string
 }
 
 const cartReducer = createSlice({
@@ -22,12 +24,13 @@ const cartReducer = createSlice({
     const cartLists: CartItem[] = []
     return {
       cartLists,
-      totalPrice: 0
+      totalPrice: 0,
+      currency: '',
+      currencySymbol: ''
     }
   },
   reducers: {
     setCartLists(state, action) {
-
     }
   }
 })
