@@ -61,3 +61,22 @@ $gaps: 1,2,3;
 @each $gap in $gaps {
   @include ellipsis($gap);
 }
+
+.flex {
+  display: flex;
+}
+
+.container {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .container-pc {
+
+  }
+}
+
+.container-fluid	{
+  display: flex;
+  width: 100%;
+}

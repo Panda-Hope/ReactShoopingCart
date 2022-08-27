@@ -1,3 +1,4 @@
+import { withTranslation } from 'react-i18next'
 import Router from '@/router'
 import './App.scss'
 
@@ -7,4 +8,4 @@ function App() {
   )
 }
 
-export default App
+export default withTranslation()(App)
