@@ -12,29 +12,61 @@ export interface CartItem {
 }
 
 export interface CartInfo {
-  cartLists: CartItem[],
+  cartLists: Map<string, CartItem>,
   totalPrice: number,
   currencySymbol: string,
-  currency: string
+  currency: string,
+  unit: number
 }
 
+const countTotalPrice = (state) => {
+  let totalPrice = 0
+  state.cartLists.forEach(i => {
+    totalPrice += i.price*i.quantity
+  })
+  state.totalPrice = totalPrice/state.unit
+}
 const cartReducer = createSlice({
   name: 'cartInfo',
   initialState: () => {
-    const cartLists: CartItem[] = []
+    const cartLists = new Map<string, CartItem>()
     return {
       cartLists,
       totalPrice: 0,
       currency: '',
-      currencySymbol: ''
+      currencySymbol: '',
+      unit: 1
     }
   },
   reducers: {
     setCartLists(state, action) {
+      const session: CartItem = action.payload
+      state.cartLists.set(session.id, session)
+
+      countTotalPrice(state)
+    },
+    removeCartItem(state, action) {
+      const productId = action.payload
+      state.cartLists.delete(productId)
+      countTotalPrice(state)
+    },
+    setCurrency(state, action) {
+      const {
+        unit,
+        currency,
+        currencySymbol
+      } = action.payload
+      state.unit = unit
+      state.currency = currency
+      state.currencySymbol = currencySymbol
     }
   }
 })
 
-export const { setCartLists } = cartReducer.actions
+export const {
+  setCartLists,
+  setCurrency,
+  removeCartItem
+} = cartReducer.actions
 
 export default cartReducer.reducer

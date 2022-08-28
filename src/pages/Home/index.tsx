@@ -18,16 +18,24 @@ import Global from '@/assets/global.svg'
 import ImageFallBack from '@/assets/150.png'
 import i18n from '@/i18n'
 import { moneyFormat } from '@/utils'
-import { CartInfo } from '@/store/cart'
+import {
+  CartInfo,
+  setCartLists
+} from '@/store/cart'
 import CartPage from '@/components/Cart'
 import useSessionData from './useSessionData'
 import './index.scss'
 
+enum LightMode {
+  Moon,
+  Sun
+}
+
 const HomePage = () => {
   // switch button
-  const [lightMode, setLightMode] = useState('sun')
+  const [lightMode, setLightMode] = useState<LightMode>(LightMode.Sun)
   const onSwitchChange = () => {
-    const model = lightMode === 'sun' ? 'moon' : 'sun'
+    const model = lightMode === LightMode.Sun ? LightMode.Moon : LightMode.Sun
     setLightMode(model)
   }
 
@@ -45,8 +53,11 @@ const HomePage = () => {
   const totalPrice = useSelector<{cartInfo: CartInfo}>(state => state.cartInfo.totalPrice) as number
   const dispatch = useDispatch()
   const onAddCart = (value) => {
+    dispatch(setCartLists({
+      ...value,
+      quantity: 1,
+    }))
     setIsOpenCart(true)
-    dispatch({type: 'setCartLists', value})
   }
 
   // cart page
@@ -59,11 +70,11 @@ const HomePage = () => {
         <div className='title'><Trans>homePage.title</Trans></div>
         <div className='main-content'>
           <Switch onChange={onSwitchChange}></Switch>
-          <img className='light-logo ml-8' src={ lightMode === 'sun' ? Sun : Moon } />
+          <img className='light-logo ml-8' src={ lightMode === LightMode.Sun ? Sun : Moon } />
           <img className='global-logo ml-8' src={Global} onClick={switchLang} />
           <span className='ml-8' onClick={switchLang}>{lang}</span>
 
-          <div className='cart-box'>
+          <div className='cart-box' onClick={() => setIsOpenCart(true)}>
             <img className='cart-logo ml-12' src={Cart} />
             <span className='ml-6'>{sessionData?.currencySymbol} {moneyFormat(totalPrice)}</span>
           </div>
@@ -85,7 +96,7 @@ const HomePage = () => {
 
                 <p className='action-box mt-20'>
                   <span>{sessionData?.currencySymbol}</span>
-                  <span>{moneyFormat(i.price/i.unit)}</span>
+                  <span>{moneyFormat(i.price/sessionData?.unit)}</span>
                   <Button className='ml-12' colorScheme='blue' onClick={() => onAddCart(i)}>
                     <Trans>homePage.addToCart</Trans>
                   </Button>

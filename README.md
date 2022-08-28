@@ -32,6 +32,7 @@ yarn build
 - [X] use docker deploy
 - [X] use latest react18、react-router6、vite
 - [X] use react hooks and component to split code
+- [X] use sentry collect online error
 - [X] support typescript
 - [X] support pc and mobile responsive
 - [X] support route lazy load

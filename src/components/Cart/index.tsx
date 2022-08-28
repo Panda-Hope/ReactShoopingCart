@@ -1,29 +1,63 @@
 import {
   Button,
   Drawer,
+  Image,
   DrawerBody,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerFooter
+  DrawerFooter,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from '@chakra-ui/react'
 import { Trans } from 'react-i18next'
-import { useState } from 'react'
+import {useRef, useState} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { removeCartItem } from '@/store/cart'
 import Close from '@/assets/close.svg'
+import Delete from '@/assets/delete.svg'
+import { CartInfo } from '@/store/cart'
+import { moneyFormat } from '@/utils'
 
 import './index.scss'
-import { useSelector } from 'react-redux'
-import { CartInfo } from '@/store/cart'
+import {UserInfoState} from "@/store/user";
 
 const CartPage = (props) => {
   const { isOpen, onClose } = props
 
   // cart store
-  const totalPrice = useSelector<{cartInfo: CartInfo}>(state => state.cartInfo.totalPrice) as number
+  const dispatch = useDispatch()
+  const {
+    cartLists,
+    totalPrice,
+    unit,
+    currencySymbol
+  } = useSelector<{cartInfo: CartInfo}>(state => state.cartInfo) as CartInfo
 
-  // on checkout click
+  const onDelSession = (id: string) => dispatch(removeCartItem(id))
+
+  // on checkout click dialog
+  const navigate = useNavigate()
+  const cancelRef = useRef<any>()
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const hasLogin = useSelector<{userInfo: {userInfo: UserInfoState}}>(state => !!state.userInfo.userInfo.userId) as boolean
+
+  const onDialogClose = () => setIsOpenDialog(false)
+  const onDialogConfirm = () => {
+    setIsOpenDialog(false)
+    navigate(`/login?redirect=${encodeURIComponent('/checkout')}`)
+  }
   const onCheckoutClick = () => {
-
+    if (!hasLogin) {
+      setIsOpenDialog(true)
+    } else {
+      navigate('/checkout')
+    }
   }
 
   return (
@@ -36,7 +70,24 @@ const CartPage = (props) => {
         </DrawerHeader>
 
         <DrawerBody>
-          <div className='cart-item'></div>
+          { Array.from(cartLists.values()).map((i, k) => (
+            <div className='cart-item' key={k}>
+              <div className='session-item'>
+                <div className='session'>
+                  <Image width='40px' src={i.cover} />
+                  <span className='ml-8'>{i.productName}</span>
+                </div>
+                <Image onClick={() => onDelSession(i.id)} className='close-icon' width='20px' src={Delete} />
+              </div>
+              <div className='quantity-box mt-20'>
+                <p><Trans>cartPage.quantity</Trans></p>
+                <div className='content-box mt-8'>
+                  <div>{i.quantity}</div>
+                  <span>{currencySymbol}{moneyFormat(i.price*i.quantity/unit)}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </DrawerBody>
 
         <DrawerFooter>
@@ -44,7 +95,7 @@ const CartPage = (props) => {
             <span className='remark'><Trans>cartPage.tooltip</Trans></span>
             <div className='price-box mt-8'>
               <Trans>cartPage.total</Trans>
-              <span>{totalPrice}</span>
+              <span>{currencySymbol} {moneyFormat(totalPrice)}</span>
             </div>
           </div>
           <Button onClick={onCheckoutClick} className='mt-12 mb-30' colorScheme='twitter' width='100%'>
@@ -52,6 +103,23 @@ const CartPage = (props) => {
           </Button>
         </DrawerFooter>
       </DrawerContent>
+
+      <AlertDialog
+        isOpen={isOpenDialog}
+        onClose={onDialogClose}
+        leastDestructiveRef={cancelRef}>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            <Trans>tooltip.title</Trans>
+          </AlertDialogHeader>
+          <AlertDialogBody><Trans>tooltip.content</Trans></AlertDialogBody>
+          <AlertDialogFooter>
+            <Button colorScheme='twitter' ref={cancelRef} onClick={onDialogConfirm}>
+              <Trans>tooltip.confirmText</Trans>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Drawer>
   )
 }

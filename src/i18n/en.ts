@@ -14,10 +14,19 @@ const en = {
     summary: 'Cart summary',
     tooltip: 'Shipping and taxes will be calculated at checkout.',
     total: 'total',
-    checkout: 'Checkout'
+    quantity: 'Quantity',
+    checkout: 'Checkout',
+    price: 'Price'
   },
   tooltip: {
-
+    title: 'Tooltip',
+    content: 'You need to sign in at first',
+    confirmText: 'Confirm'
+  },
+  checkoutPage: {
+    dear: 'Dear',
+    total: 'Total Price',
+    text: 'Congratulation purchase success!'
   }
 }
 

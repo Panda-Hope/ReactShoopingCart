@@ -14,8 +14,8 @@ const AsyncRoutes: RouteObject[] = [
         element: useLazyComponent(() => import('@/pages/Home/index'))
       },
       {
-        path: 'xx',
-        element: <AuthLazyComponent lazyComponent={() => import('@/pages/Home/index')} permission='*' />
+        path: 'checkout',
+        element: <AuthLazyComponent lazyComponent={() => import('@/pages/Checkout/index')} permission='user:checkout' />
       },
       {
         path: 'login',

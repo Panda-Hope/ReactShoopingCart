@@ -19,8 +19,32 @@
 
   .chakra-modal__body {
     .cart-item {
-      padding: 32px;
+      padding: 16px;
       box-shadow: none;
+
+      .session-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        > .session {
+          display: flex;
+          align-items: center;
+          font-weight: 600;
+          font-size: 18px;
+        }
+
+        > .close-icon {
+          cursor: pointer;
+        }
+      }
+
+      .quantity-box {
+        .content-box {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
     }
   }
 

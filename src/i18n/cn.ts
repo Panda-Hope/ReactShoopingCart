@@ -14,7 +14,19 @@ const cn = {
     summary: '购物车',
     tooltip: '运费和税收将会在结算页面统计',
     total: '总金额',
-    checkout: '开始结算'
+    quantity: '数量',
+    checkout: '开始结算',
+    price: '单价'
+  },
+  tooltip: {
+    title: '提示',
+    content: '您需要先登陆',
+    confirmText: '确认'
+  },
+  checkout: {
+    dear: '亲爱的',
+    total: '总金额',
+    text: '恭喜您，购买成功!'
   }
 }
 

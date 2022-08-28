@@ -16,11 +16,11 @@ const userReducer = createSlice({
       avatar: '',
       permissions: []
     }
-    return userInfo
+    return {userInfo}
   },
   reducers: {
     setUserInfo(state, action) {
-
+      state.userInfo = action.payload
     }
   }
 })

@@ -11,8 +11,11 @@ import {
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import Global from '@/assets/global.svg'
+import { setUserInfo, UserInfoState } from '@/store/user'
 import { loginUser } from '@/api'
+import { unicode } from '@/utils'
 
 import './index.scss'
 import i18n from "@/i18n";
@@ -30,7 +33,17 @@ const LoginPage = () => {
 
   // login check
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const onLogin = () => {
+    const userInfo: UserInfoState = {
+      userId: unicode(),
+      userName: 'Test',
+      avatar: '',
+      permissions: [
+        'user:checkout'
+      ]
+    }
+    dispatch(setUserInfo(userInfo))
     navigate(redirect || '/')
   }
 

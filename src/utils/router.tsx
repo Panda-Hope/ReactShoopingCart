@@ -6,6 +6,8 @@ import {
   useEffect
 } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { UserInfoState } from '@/store/user'
 
 import { hasPermission } from '@/utils/permission'
 
@@ -32,10 +34,11 @@ export const useAuthLazyComponent = (props: AuthLazyProps) => {
     permission
   } = props
   const navigate = useNavigate()
+  const permissions = useSelector<{userInfo: {userInfo: UserInfoState}}>(state => state.userInfo.userInfo.permissions) as string[]
 
   useEffect(() => {
     const check = async () => {
-      const passed = await hasPermission(permission)
+      const passed = hasPermission(permissions, permission)
       if (passed) return
 
       navigate('/401')
