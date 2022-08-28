@@ -41,10 +41,5 @@ yarn build
 - [X] support jest unit test
 - [X] support husky commit check
 
-## Directory
-|-- public // public assets
-|-- src
-|   |-- api // api request
-
 
 
