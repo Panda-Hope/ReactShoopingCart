@@ -14,8 +14,14 @@ RUN npm install
 # copy code
 COPY [".", "."]
 
-# expose port
-EXPOSE 3000
+RUN npm run build
 
-# start server
-CMD [ "npm", "run", "preview" ]
+# use nginx
+FROM nginx
+
+COPY dist/ /usr/share/nginx/html/
+
+# copy file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+

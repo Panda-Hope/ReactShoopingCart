@@ -7,13 +7,14 @@ import StaticRoutes from './staticRoutes'
 import AsyncRoutes from './asyncRoutes'
 
 // setup react router
+const BasePath = import.meta.env.MODE === 'production' ? '/react' : '/'
 const SetRouter = () => {
   // Initialized App Route
   const AppRoutes: RouteObject[] = [...AsyncRoutes, ...StaticRoutes]
 
   const Routes = () => useRoutes(AppRoutes)
   return (
-    <Router basename='/'>
+    <Router basename={BasePath}>
       <Routes/>
     </Router>
   )
