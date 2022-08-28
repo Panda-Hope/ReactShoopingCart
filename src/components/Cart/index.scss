@@ -1,4 +1,7 @@
 .cart-page {
+  position: relative;
+  z-index: 999 !important;
+
   .chakra-modal__header {
     padding: 0 32px;
     display: flex;
