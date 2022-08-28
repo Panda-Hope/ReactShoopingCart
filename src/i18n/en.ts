@@ -3,7 +3,9 @@ const en = {
   signIn: 'Sign in',
   loginPage: {
     username: 'User Name',
-    password: 'Password'
+    password: 'Password',
+    userError: 'UserName is required.',
+    passwordError: 'Password is required.'
   },
   homePage: {
     title: 'Cart',

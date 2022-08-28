@@ -2,6 +2,9 @@ import {
   Button,
   Drawer,
   Image,
+  FormControl,
+  NumberInput,
+  NumberInputField,
   DrawerBody,
   DrawerHeader,
   DrawerOverlay,
@@ -18,7 +21,7 @@ import { Trans } from 'react-i18next'
 import {useRef, useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { removeCartItem } from '@/store/cart'
+import {removeCartItem, setCartLists} from '@/store/cart'
 import Close from '@/assets/close.svg'
 import Delete from '@/assets/delete.svg'
 import { CartInfo } from '@/store/cart'
@@ -60,6 +63,14 @@ const CartPage = (props) => {
     }
   }
 
+  // form action
+  const onNumberChange = (value, number) => {
+    dispatch(setCartLists({
+      ...value,
+      quantity: number
+    }))
+  }
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement='right' size='md'>
       <DrawerOverlay />
@@ -82,7 +93,18 @@ const CartPage = (props) => {
               <div className='quantity-box mt-20'>
                 <p><Trans>cartPage.quantity</Trans></p>
                 <div className='content-box mt-8'>
-                  <div>{i.quantity}</div>
+                  <FormControl>
+                    <NumberInput
+                      width='80px'
+                      value={i.quantity}
+                      onChange={(n) => onNumberChange(i, n)}
+                      className='mt-8'
+                      defaultValue={1}
+                      max={i.inventory}
+                      min={1}>
+                      <NumberInputField width='auto' />
+                    </NumberInput>
+                  </FormControl>
                   <span>{currencySymbol}{moneyFormat(i.price*i.quantity/unit)}</span>
                 </div>
               </div>

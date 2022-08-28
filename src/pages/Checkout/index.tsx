@@ -5,11 +5,12 @@ import {
   Image
 } from '@chakra-ui/react'
 import { Trans } from 'react-i18next'
+import { UserInfoState } from '@/store/user'
+import { useNavigate } from 'react-router-dom'
 import { CartInfo } from '@/store/cart'
 import { moneyFormat } from '@/utils'
 
 import './index.scss'
-import {UserInfoState} from "@/store/user";
 
 const CheckoutPage = () => {
   // user info
@@ -22,6 +23,9 @@ const CheckoutPage = () => {
     unit,
     currencySymbol
   } = useSelector<{cartInfo: CartInfo}>(state => state.cartInfo) as CartInfo
+
+  const navigate = useNavigate()
+  const goHome = () => navigate('/')
 
   return (
     <Container maxW='768px' className='checkout-page'>
@@ -52,7 +56,7 @@ const CheckoutPage = () => {
         <span>: {currencySymbol}{moneyFormat(totalPrice)}</span>
       </p>
 
-      <Button className='mt-20' width='100%' colorScheme='twitter'>
+      <Button onClick={goHome} className='mt-20' width='100%' colorScheme='twitter'>
         <Trans>checkoutPage.text</Trans>
       </Button>
     </Container>

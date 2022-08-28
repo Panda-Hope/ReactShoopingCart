@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import { Trans } from 'react-i18next'
 import {
   Container,
@@ -9,6 +9,7 @@ import {
   Button,
   NumberInput,
   NumberInputField,
+  FormControl,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import Moon from '@/assets/moon.svg'
@@ -46,16 +47,25 @@ const HomePage = () => {
   // fetch session data
   const {
     sessionData,
-    loadingData
+    loadingData,
+    setSessionData
   } = useSessionData()
+
+  // form action
+  const onNumberChange = (index, number) => {
+    // @ts-ignore
+    sessionData.sessionLists[index].quantity = number
+    // @ts-ignore
+    setSessionData({...sessionData})
+  }
 
   // cart store
   const totalPrice = useSelector<{cartInfo: CartInfo}>(state => state.cartInfo.totalPrice) as number
   const dispatch = useDispatch()
-  const onAddCart = (value) => {
+  const onAddCart = (i, index) => {
     dispatch(setCartLists({
-      ...value,
-      quantity: 1,
+      ...i,
+      quantity: i.quantity,
     }))
     setIsOpenCart(true)
   }
@@ -90,14 +100,22 @@ const HomePage = () => {
 
               <div className='price-box mt-20'>
                 <div className='quantity'><Trans>homePage.quantity</Trans></div>
-                <NumberInput className='mt-8' defaultValue={1} max={i.inventory} min={1}>
-                  <NumberInputField width='auto' />
-                </NumberInput>
+                <FormControl>
+                  <NumberInput
+                    value={i.quantity}
+                    onChange={(n) => onNumberChange(k, n)}
+                    className='mt-8'
+                    defaultValue={1}
+                    max={i.inventory}
+                    min={1}>
+                    <NumberInputField width='auto' />
+                  </NumberInput>
+                </FormControl>
 
                 <p className='action-box mt-20'>
                   <span>{sessionData?.currencySymbol}</span>
                   <span>{moneyFormat(i.price/sessionData?.unit)}</span>
-                  <Button className='ml-12' colorScheme='blue' onClick={() => onAddCart(i)}>
+                  <Button className='ml-12' colorScheme='blue' onClick={() => onAddCart(i, k)}>
                     <Trans>homePage.addToCart</Trans>
                   </Button>
                 </p>

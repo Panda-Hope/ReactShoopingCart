@@ -19,6 +19,7 @@ import { unicode } from '@/utils'
 
 import './index.scss'
 import i18n from "@/i18n";
+import {Form} from "formik";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false)
@@ -35,9 +36,18 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const onLogin = () => {
+    if (!username || !password) {
+      if (!username) {
+        setShowUserError(true)
+      }
+      if (!password) {
+        setShowPasswordError(true)
+      }
+      return
+    }
     const userInfo: UserInfoState = {
       userId: unicode(),
-      userName: 'Test',
+      userName: username,
       avatar: '',
       permissions: [
         'user:checkout'
@@ -47,23 +57,31 @@ const LoginPage = () => {
     navigate(redirect || '/')
   }
 
+  // form data
+  const [showUserError, setShowUserError] = useState(false)
+  const [showPasswordError, setShowPasswordError] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
   return (
     <Container className='login-page'>
       <div className='lang-box'>
         <Image width='20px' onClick={switchLang} src={Global} />
         <span className='ml-8' onClick={switchLang}>{lang}</span>
       </div>
-      <FormControl>
+      <div>
         <div className='login-title'><Trans>login</Trans></div>
-        <div>
+        <FormControl isInvalid={showUserError}>
           <FormLabel><Trans>loginPage.username</Trans></FormLabel>
-          <Input type='text' />
-        </div>
+          <Input value={username} onChange={e => setUsername(e.target.value)} type='text' />
+          <FormErrorMessage><Trans>loginPage.userError</Trans></FormErrorMessage>
+        </FormControl>
 
-        <div className='mt-12'>
+        <FormControl isInvalid={showPasswordError} className='mt-12'>
           <FormLabel><Trans>loginPage.password</Trans></FormLabel>
-          <Input type='password' />
-        </div>
+          <Input value={password} onChange={e => setPassword(e.target.value)} type='password' />
+          <FormErrorMessage><Trans>loginPage.passwordError</Trans></FormErrorMessage>
+        </FormControl>
 
         <div className='mt-12'>
           <Button
@@ -75,7 +93,7 @@ const LoginPage = () => {
             <Trans>signIn</Trans>
           </Button>
         </div>
-      </FormControl>
+      </div>
     </Container>
   )
 }
